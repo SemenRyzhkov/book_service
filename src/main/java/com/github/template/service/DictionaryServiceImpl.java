@@ -1,7 +1,6 @@
 package com.github.template.service;
 
 import com.github.template.model.db.Dictionary;
-import com.github.template.repository.DictionaryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
