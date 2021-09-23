@@ -7,10 +7,11 @@ import com.github.template.repository.BookRepository;
 import com.github.template.repository.ReviewRepository;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -19,8 +20,8 @@ public class ReviewServiceImpl implements ReviewService {
     private final BookRepository bookRepository;
 
     @Override
-    public List<Review> getAll(long bookId) {
-        return reviewRepository.findAllByBookId(bookId);
+    public Page<Review> getAll(long bookId, Pageable pageable) {
+        return reviewRepository.findAllByBookId(bookId, pageable);
     }
 
     @Override

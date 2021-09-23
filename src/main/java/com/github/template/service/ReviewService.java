@@ -1,12 +1,12 @@
 package com.github.template.service;
 
 import com.github.template.model.db.db.Review;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ReviewService {
 
-    List<Review> getAll(long bookId);
+    Page<Review> getAll(long bookId, Pageable pageable);
 
     Review get(long id, long bookId);
 

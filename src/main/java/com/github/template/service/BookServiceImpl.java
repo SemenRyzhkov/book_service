@@ -4,23 +4,21 @@ package com.github.template.service;
 import com.github.template.exception.NotFoundException;
 import com.github.template.model.db.db.Book;
 import com.github.template.repository.BookRepository;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
+@AllArgsConstructor
 public class BookServiceImpl implements BookService {
 
     private final BookRepository repository;
 
-    public BookServiceImpl(BookRepository repository) {
-        this.repository = repository;
-    }
-
     @Override
-    public List<Book> getAll() {
-        return repository.findAll();
+    public Page<Book> getAll(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     @Override
