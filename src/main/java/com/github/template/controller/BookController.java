@@ -1,12 +1,11 @@
 package com.github.template.controller;
 
-import com.github.template.model.db.db.Book;
+import com.github.template.model.db.db.BookDto;
 import com.github.template.service.BookService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,30 +20,30 @@ public class BookController {
     private final BookService service;
 
     @GetMapping
-    public Page<Book> getAll(
-            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable){
+    public Page<BookDto> getAll(
+            @PageableDefault Pageable pageable){
         log.info("getAll");
         return service.getAll(pageable);
     }
 
     @GetMapping("/{id}")
-    public Book get(@PathVariable long id){
+    public BookDto get(@PathVariable long id){
         log.info("get book {}", id);
         return service.get(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void create(@RequestBody Book book){
-        log.info("create book{}", book);
-        service.create(book);
+    public void create(@RequestBody BookDto bookDto){
+        log.info("create book{}", bookDto);
+        service.create(bookDto);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Book book, @PathVariable long id){
-        log.info("update book{}", book);
-        service.update(book, id);
+    public void update(@RequestBody BookDto bookDto, @PathVariable long id){
+        log.info("update book{}", bookDto);
+        service.update(bookDto, id);
     }
 
     @DeleteMapping("/{id}")

@@ -1,17 +1,21 @@
 package com.github.template.service;
 
 import com.github.template.exception.NotFoundException;
+import com.github.template.mapper.ReviewMapper;
 import com.github.template.model.db.db.Book;
 import com.github.template.model.db.db.Review;
+import com.github.template.model.db.to.ReviewDto;
 import com.github.template.repository.BookRepository;
 import com.github.template.repository.ReviewRepository;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -20,36 +24,40 @@ public class ReviewServiceImpl implements ReviewService {
     private final BookRepository bookRepository;
 
     @Override
-    public Page<Review> getAll(long bookId, Pageable pageable) {
-        return reviewRepository.findAllByBookId(bookId, pageable);
+    public Page<ReviewDto> getAll(long bookId, Pageable pageable) {
+        List<ReviewDto> reviews = ReviewMapper.REVIEW_MAPPER.reviewsToReviewsDto(reviewRepository.findAllByBookId(bookId));
+        return new PageImpl<>(reviews, pageable, reviews.size());
     }
 
     @Override
-    public Review get(long id, long bookId) {
-        return reviewRepository.getByIdAndBookId(id, bookId).orElseThrow(() -> new NotFoundException("Review not found"));
+    public ReviewDto get(long id, long bookId) {
+        Review review = reviewRepository.getByIdAndBookId(id, bookId).orElseThrow(
+                () -> new NotFoundException("Review not found"));
+        return ReviewMapper.REVIEW_MAPPER.entityToDto(review);
     }
 
     @Override
-    public void create(@NonNull Review review, long bookId) {
+    public void create(@NonNull ReviewDto reviewDto, long bookId) {
         Book book = bookRepository.findById(bookId).orElse(null);
         if (book != null) {
-            review.setReviewDate(LocalDateTime.now());
-            review.setBook(book);
-            reviewRepository.save(review);
+            reviewDto.setReviewDate(LocalDateTime.now());
+            reviewDto.setBook(book);
+            reviewRepository.save(ReviewMapper.REVIEW_MAPPER.dtoToEntity(reviewDto));
         } else throw new NotFoundException("Book not found");
     }
 
     @Override
-    public void update(@NonNull Review review, long id, long bookId) {
+    public void update(@NonNull ReviewDto reviewDto, long id, long bookId) {
         Book book = bookRepository.findById(bookId).orElse(null);
         if (book != null) {
             reviewRepository.findById(id).map(newReview -> {
-                newReview.setText(review.getText());
+                newReview.setText(reviewDto.getText());
                 newReview.setReviewDate(LocalDateTime.now());
-                newReview.setRating(review.getRating());
-                newReview.setBook(review.getBook());
+                newReview.setRating(reviewDto.getRating());
+                newReview.setBook(reviewDto.getBook());
                 return reviewRepository.save(newReview);
             }).orElseGet(() -> {
+                Review review = ReviewMapper.REVIEW_MAPPER.dtoToEntity(reviewDto);
                 review.setId(id);
                 return reviewRepository.save(review);
             });

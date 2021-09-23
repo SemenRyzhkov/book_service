@@ -1,18 +1,18 @@
 package com.github.template.service;
 
-import com.github.template.model.db.db.Book;
+import com.github.template.model.db.db.BookDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface BookService {
 
-    Page<Book> getAll(Pageable pageable);
+    Page<BookDto> getAll(Pageable pageable);
 
-    Book get(long id);
+    BookDto get(long id);
 
-    void create(Book book);
+    void create(BookDto book);
 
-    void update(Book book, long id);
+    void update(BookDto book, long id);
 
     void delete(long id);
 }

@@ -1,7 +1,7 @@
 package com.github.template.controller;
 
 
-import com.github.template.model.db.db.Review;
+import com.github.template.model.db.to.ReviewDto;
 import com.github.template.service.ReviewService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,36 +21,36 @@ public class ReviewController {
     private final ReviewService service;
 
     @GetMapping("/{bookId}/review")
-    public Page<Review> getAll(@PathVariable long bookId,
-                               @PageableDefault Pageable pageable) {
+    public Page<ReviewDto> getAll(@PathVariable long bookId,
+                                  @PageableDefault Pageable pageable) {
         log.info("getAllReview for book {}", bookId);
         return service.getAll(bookId, pageable);
     }
 
     @GetMapping("/{bookId}/review/{id}")
-    public Review get(@PathVariable long id, @PathVariable long bookId) {
+    public ReviewDto get(@PathVariable long id, @PathVariable long bookId) {
         log.info("get review {} for book {}", id, bookId);
         return service.get(id, bookId);
     }
 
     @PostMapping("/{bookId}/review")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void create(@RequestBody Review review, @PathVariable long bookId) {
-        log.info("create review{} for book{}", review, bookId);
-        service.create(review, bookId);
+    public void create(@RequestBody ReviewDto reviewDto, @PathVariable long bookId) {
+        log.info("create review{} for book{}", reviewDto, bookId);
+        service.create(reviewDto, bookId);
     }
 
     @PutMapping("/{bookId}/review/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Review review, @PathVariable long bookId, @PathVariable long id) {
-        log.info("update review{} for book{}", review, id);
-        service.update(review, id, bookId);
+    public void update(@RequestBody ReviewDto reviewDto, @PathVariable long bookId, @PathVariable long id) {
+        log.info("update review{} for book{}", reviewDto, id);
+        service.update(reviewDto, id, bookId);
     }
 
     @DeleteMapping("/{bookId}/review/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable long bookId, @PathVariable long id) {
-        log.info("delete review{} for book", id, bookId);
+        log.info("delete review{} for book{}", id, bookId);
         service.delete(id, bookId);
     }
 }

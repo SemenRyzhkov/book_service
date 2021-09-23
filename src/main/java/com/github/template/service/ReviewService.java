@@ -1,18 +1,18 @@
 package com.github.template.service;
 
-import com.github.template.model.db.db.Review;
+import com.github.template.model.db.to.ReviewDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ReviewService {
 
-    Page<Review> getAll(long bookId, Pageable pageable);
+    Page<ReviewDto> getAll(long bookId, Pageable pageable);
 
-    Review get(long id, long bookId);
+    ReviewDto get(long id, long bookId);
 
-    void create(Review review, long bookId);
+    void create(ReviewDto review, long bookId);
 
-    void update(Review review, long id, long bookId);
+    void update(ReviewDto review, long id, long bookId);
 
     void delete(long id, long bookId);
 }
