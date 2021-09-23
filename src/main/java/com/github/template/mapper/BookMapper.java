@@ -4,14 +4,13 @@ import com.github.template.model.db.db.Book;
 import com.github.template.model.db.db.BookDto;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface BookMapper {
 
-    BookMapper BOOK_MAPPER = Mappers.getMapper(BookMapper.class);
+//    BookMapper BOOK_MAPPER = Mappers.getMapper(BookMapper.class);
 
     BookDto entityToDto(Book book);
 

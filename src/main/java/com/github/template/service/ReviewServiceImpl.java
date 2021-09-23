@@ -22,10 +22,11 @@ import java.util.List;
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final BookRepository bookRepository;
+    private final ReviewMapper reviewMapper;
 
     @Override
     public Page<ReviewDto> getAll(long bookId, Pageable pageable) {
-        List<ReviewDto> reviews = ReviewMapper.REVIEW_MAPPER.reviewsToReviewsDto(reviewRepository.findAllByBookId(bookId));
+        List<ReviewDto> reviews = reviewMapper.reviewsToReviewsDto(reviewRepository.findAllByBookId(bookId));
         return new PageImpl<>(reviews, pageable, reviews.size());
     }
 
@@ -33,7 +34,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDto get(long id, long bookId) {
         Review review = reviewRepository.getByIdAndBookId(id, bookId).orElseThrow(
                 () -> new NotFoundException("Review not found"));
-        return ReviewMapper.REVIEW_MAPPER.entityToDto(review);
+        return reviewMapper.entityToDto(review);
     }
 
     @Override
@@ -42,7 +43,7 @@ public class ReviewServiceImpl implements ReviewService {
         if (book != null) {
             reviewDto.setReviewDate(LocalDateTime.now());
             reviewDto.setBook(book);
-            reviewRepository.save(ReviewMapper.REVIEW_MAPPER.dtoToEntity(reviewDto));
+            reviewRepository.save(reviewMapper.dtoToEntity(reviewDto));
         } else throw new NotFoundException("Book not found");
     }
 
@@ -57,7 +58,7 @@ public class ReviewServiceImpl implements ReviewService {
                 newReview.setBook(reviewDto.getBook());
                 return reviewRepository.save(newReview);
             }).orElseGet(() -> {
-                Review review = ReviewMapper.REVIEW_MAPPER.dtoToEntity(reviewDto);
+                Review review = reviewMapper.dtoToEntity(reviewDto);
                 review.setId(id);
                 return reviewRepository.save(review);
             });

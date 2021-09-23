@@ -20,23 +20,23 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository repository;
+    private final BookMapper mapper;
 
     @Override
     public Page<BookDto> getAll(Pageable pageable) {
-        List<BookDto> books = BookMapper.BOOK_MAPPER.booksToBooksDto(repository.findAll());
+        List<BookDto> books = mapper.booksToBooksDto(repository.findAll());
         return new PageImpl<>(books, pageable, books.size());
     }
 
     @Override
     public BookDto get(long id) {
         Book book = repository.findById(id).orElseThrow(() -> new NotFoundException("Book not found"));
-        return BookMapper.BOOK_MAPPER.entityToDto(book);
+        return mapper.entityToDto(book);
     }
 
     @Override
     public void create(@NonNull BookDto bookDto) {
-       Book book =  BookMapper.BOOK_MAPPER.dtoToEntity(bookDto);
-       repository.save(book);
+        repository.save(mapper.dtoToEntity(bookDto));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class BookServiceImpl implements BookService {
             newBook.setPublishDate(bookDto.getPublishDate());
             return repository.save(newBook);
         }).orElseGet(() -> {
-            Book book = BookMapper.BOOK_MAPPER.dtoToEntity(bookDto);
+            Book book = mapper.dtoToEntity(bookDto);
             book.setId(id);
             return repository.save(book);
         });
