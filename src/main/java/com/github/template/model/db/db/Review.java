@@ -1,5 +1,6 @@
 package com.github.template.model.db.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,10 @@ public class Review {
 
     private LocalDateTime reviewDate;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    private Short rating;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", referencedColumnName = "id")
+    @JsonIgnore
     private Book book;
 }

@@ -21,9 +21,12 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String author;
+
+    private String title;
+
     private String genre;
 
     private LocalDate publishDate;
 
-    private Short rating;
 }
