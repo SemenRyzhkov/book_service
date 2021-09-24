@@ -1,7 +1,7 @@
 package com.github.template.mapper;
 
 import com.github.template.model.db.db.Book;
-import com.github.template.model.db.db.BookDto;
+import com.github.template.model.db.to.BookDto;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 

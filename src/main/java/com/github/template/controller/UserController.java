@@ -1,7 +1,7 @@
 package com.github.template.controller;
 
-import com.github.template.model.db.to.BookDto;
-import com.github.template.service.BookService;
+import com.github.template.model.db.to.UserDto;
+import com.github.template.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -12,44 +12,45 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(value = BookController.REST_URL)
+@RequestMapping(value = UserController.REST_URL)
 @Slf4j
-public class BookController {
-    static final String REST_URL = "/api/books";
+public class UserController {
+    static final String REST_URL = "/api/users";
 
-    private final BookService service;
+    private final UserService service;
 
     @GetMapping
-    public Page<BookDto> getAll(
+    public Page<UserDto> getAll(
             @PageableDefault Pageable pageable){
-        log.info("getAll");
+        log.info("getAllUser");
         return service.getAll(pageable);
     }
 
     @GetMapping("/{id}")
-    public BookDto get(@PathVariable long id){
-        log.info("get book {}", id);
+    public UserDto get(@PathVariable long id){
+        log.info("get user {}", id);
         return service.get(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void create(@RequestBody BookDto bookDto){
-        log.info("create book{}", bookDto);
-        service.create(bookDto);
+    public void create(@RequestBody UserDto userDto){
+        log.info("create user{}", userDto);
+        service.create(userDto);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody BookDto bookDto, @PathVariable long id){
-        log.info("update book{}", bookDto);
-        service.update(bookDto, id);
+    public void update(@RequestBody UserDto userDto, @PathVariable long id){
+        log.info("update user{}", userDto);
+        service.update(userDto, id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id){
-        log.info("delete book{}", id);
+        log.info("delete user{}", id);
         service.delete(id);
     }
 }
+

@@ -5,9 +5,6 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
                    http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
     <changeSet author="ryzhkov" id="1">
-        <rollback>
-            <dropTable tableName="user"/>
-        </rollback>
         <createTable tableName="user">
             <column autoIncrement="true" name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" primaryKeyName="user_pk"/>
@@ -17,9 +14,6 @@
             <column name="role" type="VARCHAR(255)"/>
         </createTable>
 
-        <rollback>
-            <dropTable tableName="book"/>
-        </rollback>
         <createTable tableName="book">
             <column autoIncrement="true" name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" primaryKeyName="book_pk"/>
@@ -29,10 +23,6 @@
             <column name="publish_date" type="TIMESTAMP"/>
             <column name="genre" type="VARCHAR(255)"/>
         </createTable>
-
-        <rollback>
-            <dropTable tableName="review"/>
-        </rollback>
 
         <createTable tableName="review">
             <column autoIncrement="true" name="id" type="BIGSERIAL">
@@ -48,17 +38,8 @@
                                  referencedColumnNames="id"/>
 
     </changeSet>
-        <changeSet id="6" author="sryzhkov">
+        <changeSet id="13" author="sryzhkov" runOnChange="true">
             <sqlFile path="data/init_db.sql" relativeToChangelogFile="true"/>
-            <rollback>
-<!--                <dropTable tableName="user"/>-->
-<!--                <dropTable tableName="review"/>-->
-<!--                <dropTable tableName="book"/>-->
-
-                delete from public.book;
-                delete from public.user;
-                delete from public.review;
-            </rollback>
         </changeSet>
 
 </databaseChangeLog>

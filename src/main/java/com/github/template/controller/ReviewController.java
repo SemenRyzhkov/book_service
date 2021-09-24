@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class ReviewController {
 
     @GetMapping("/{bookId}/review")
     public Page<ReviewDto> getAll(@PathVariable long bookId,
-                                  @PageableDefault Pageable pageable) {
+                                  @PageableDefault(sort = {"rating"}, direction = Sort.Direction.DESC) Pageable pageable) {
         log.info("getAllReview for book {}", bookId);
         return service.getAll(bookId, pageable);
     }
@@ -51,6 +52,6 @@ public class ReviewController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable long bookId, @PathVariable long id) {
         log.info("delete review{} for book{}", id, bookId);
-        service.delete(id, bookId);
+        service.delete(id);
     }
 }

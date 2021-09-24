@@ -29,4 +29,8 @@ public class Book {
 
     private LocalDate publishDate;
 
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    private List<Review> reviews;
+
 }

@@ -10,12 +10,10 @@ import com.github.template.repository.ReviewRepository;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -26,8 +24,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Page<ReviewDto> getAll(long bookId, Pageable pageable) {
-        List<ReviewDto> reviews = reviewMapper.reviewsToReviewsDto(reviewRepository.findAllByBookId(bookId));
-        return new PageImpl<>(reviews, pageable, reviews.size());
+        return reviewRepository.findAllByBookId(bookId, pageable).map(reviewMapper::entityToDto);
     }
 
     @Override
@@ -39,34 +36,30 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void create(@NonNull ReviewDto reviewDto, long bookId) {
-        Book book = bookRepository.findById(bookId).orElse(null);
-        if (book != null) {
-            reviewDto.setReviewDate(LocalDateTime.now());
-            reviewDto.setBook(book);
-            reviewRepository.save(reviewMapper.dtoToEntity(reviewDto));
-        } else throw new NotFoundException("Book not found");
+        Book book = bookRepository.getOne(bookId);
+        reviewDto.setReviewDate(LocalDateTime.now());
+        reviewDto.setBook(book);
+        reviewRepository.save(reviewMapper.dtoToEntity(reviewDto));
     }
 
     @Override
     public void update(@NonNull ReviewDto reviewDto, long id, long bookId) {
-        Book book = bookRepository.findById(bookId).orElse(null);
-        if (book != null) {
-            reviewRepository.findById(id).map(newReview -> {
-                newReview.setText(reviewDto.getText());
-                newReview.setReviewDate(LocalDateTime.now());
-                newReview.setRating(reviewDto.getRating());
-                newReview.setBook(reviewDto.getBook());
-                return reviewRepository.save(newReview);
-            }).orElseGet(() -> {
-                Review review = reviewMapper.dtoToEntity(reviewDto);
-                review.setId(id);
-                return reviewRepository.save(review);
-            });
-        }
+        Book book = bookRepository.getOne(bookId);
+        reviewRepository.findById(id)
+                .map(review -> {
+                    reviewDto.setId(id);
+                    reviewDto.setBook(book);
+                    return reviewRepository.save(reviewMapper.dtoToEntity(reviewDto));
+                })
+                .orElseGet(() -> {
+                    Review review = reviewMapper.dtoToEntity(reviewDto);
+                    review.setId(id);
+                    return reviewRepository.save(review);
+                });
     }
 
     @Override
-    public void delete(long id, long bookId) {
-        reviewRepository.deleteByIdAndBookId(id, bookId);
+    public void delete(long id) {
+        reviewRepository.deleteById(id);
     }
 }

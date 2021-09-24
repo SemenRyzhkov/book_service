@@ -1,6 +1,6 @@
 package com.github.template.service;
 
-import com.github.template.model.db.db.BookDto;
+import com.github.template.model.db.to.BookDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
