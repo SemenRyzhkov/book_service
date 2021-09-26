@@ -8,7 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name="user", schema = "public")
+@Table(name = "user", schema = "public")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -20,8 +20,13 @@ public class User {
 
     private String name;
 
+    private String password;
+
     private String email;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 }

@@ -10,8 +10,10 @@
                 <constraints primaryKey="true" primaryKeyName="user_pk"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
             <column name="email" type="VARCHAR(255)"/>
-            <column name="role" type="VARCHAR(255)"/>
+            <column name="role" type="VARCHAR(20)"/>
+            <column name="status" type="VARCHAR(20)"/>
         </createTable>
 
         <createTable tableName="book">
