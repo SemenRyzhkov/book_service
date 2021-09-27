@@ -26,3 +26,8 @@ spring:
 
   main:
     allow-bean-definition-overriding: true
+
+jwt:
+  secret: "spring"
+  expiration: 604800
+  header: Authorization
