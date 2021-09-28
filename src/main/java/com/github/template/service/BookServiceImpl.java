@@ -8,6 +8,9 @@ import com.github.template.repository.BookRepository;
 import com.github.template.repository.ReviewRepository;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class BookServiceImpl implements BookService {
 
     private final BookRepository repository;
@@ -22,37 +26,34 @@ public class BookServiceImpl implements BookService {
     private final BookMapper mapper;
 
     @Override
+    @Cacheable("books")
     public Page<BookDto> getAll(Pageable pageable) {
         return repository.findAll(pageable).map(mapper::entityToDto);
     }
 
     @Override
+    @Cacheable("books")
     public BookDto get(long id) {
-        Book book = repository.getOne(id);
-        return mapper.entityToDto(book);
+        log.info("getting book by id: {}", id);
+        return mapper.entityToDto(repository.getOne(id));
     }
 
     @Override
-    public void create(@NonNull BookDto bookDto) {
-        repository.save(mapper.dtoToEntity(bookDto));
+    @CacheEvict(value = "books", allEntries = true)
+    public Book create(@NonNull BookDto bookDto) {
+       return repository.save(mapper.dtoToEntity(bookDto));
     }
 
     @Override
+    @CacheEvict(value = "books", allEntries = true)
     public void update(@NonNull BookDto bookDto, long id) {
-        repository.findById(id)
-                .map(user -> {
-                    bookDto.setId(id);
-                    return repository.save(mapper.dtoToEntity(bookDto));
-                })
-                .orElseGet(() -> {
-                    Book book = mapper.dtoToEntity(bookDto);
-                    book.setId(id);
-                    return repository.save(book);
-                });
+       repository.getOne(id);
+       repository.save(mapper.dtoToEntity(bookDto));
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "books", allEntries = true)
     public void delete(long id) {
         reviewRepository.deleteByBookId(id);
         repository.deleteById(id);

@@ -5,7 +5,6 @@ import com.github.template.model.db.db.User;
 import com.github.template.model.db.to.AuthenticationRequestDto;
 import com.github.template.repository.UserRepository;
 import com.github.template.security.JwtTokenProvider;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,8 +24,8 @@ import java.util.Map;
 public class AuthenticationRestController {
 
     private final AuthenticationManager authenticationManager;
-    private UserRepository userRepository;
-    private JwtTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public AuthenticationRestController(
             AuthenticationManager authenticationManager,
@@ -39,7 +38,6 @@ public class AuthenticationRestController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDto request){
-        try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
             User user = userRepository.findByEmail(request.getEmail()).orElseThrow(()->
@@ -49,9 +47,6 @@ public class AuthenticationRestController {
             response.put("email", request.getEmail());
             response.put("token", token);
             return ResponseEntity.ok(response);
-        }catch (ArithmeticException e){
-            return new ResponseEntity<>("Invalid email/password combination", HttpStatus.FORBIDDEN);
-        }
     }
 
     @PostMapping("/logout")

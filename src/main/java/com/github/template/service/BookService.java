@@ -1,5 +1,6 @@
 package com.github.template.service;
 
+import com.github.template.model.db.db.Book;
 import com.github.template.model.db.to.BookDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +11,7 @@ public interface BookService {
 
     BookDto get(long id);
 
-    void create(BookDto book);
+    Book create(BookDto book);
 
     void update(BookDto book, long id);
 

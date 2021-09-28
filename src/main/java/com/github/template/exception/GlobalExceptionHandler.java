@@ -1,34 +1,42 @@
-package com.github.template.config;
+package com.github.template.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.persistence.EntityNotFoundException;
+
+@ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
-    @ControllerAdvice
-    @Slf4j
-    public class GlobalExceptionHandler {
-
-        @ExceptionHandler(IllegalArgumentException.class)
-        public ResponseEntity<ExeptionResponse> handleIllegalArgumentException(IllegalArgumentException e) {
-            ExeptionResponse exeptionResponse = new ExeptionResponse(e.getMessage());
-            log.warn(e.getMessage());
-            return new ResponseEntity<>(exeptionResponse, HttpStatus.METHOD_NOT_ALLOWED); //TODO нежнее)
-        }
-
-        @ExceptionHandler(EntityNotFoundException.class)
-        public ResponseEntity<ExeptionResponse> handleEntityNotFoundException(EntityNotFoundException e) {
-            ExeptionResponse exeptionResponse = new ExeptionResponse(e.getMessage());
-            log.warn(e.getMessage());
-            return new ResponseEntity<>(exeptionResponse, HttpStatus.NOT_FOUND);
-        }
-
-        @ExceptionHandler(MethodArgumentNotValidException.class)
-        public ResponseEntity<ExeptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-            ExeptionResponse exeptionResponse = new ExeptionResponse(e.getMessage());
-            log.warn(e.getMessage());
-            return new ResponseEntity<>(exeptionResponse, HttpStatus.BAD_REQUEST);
-        }
-
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException e) {
+        return exceptionHandler(e, HttpStatus.METHOD_NOT_ALLOWED);
     }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleEntityNotFoundException(EntityNotFoundException e) {
+       return exceptionHandler(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        return exceptionHandler(e, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ExceptionResponse> handleAuthenticationException(AuthenticationException e){
+        return exceptionHandler(e, HttpStatus.FORBIDDEN);
+    }
+
+    private ResponseEntity<ExceptionResponse> exceptionHandler(Exception e, HttpStatus status) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(e.getMessage());
+        log.warn(e.getMessage());
+        return new ResponseEntity<>(exceptionResponse, status);
+    }
+}

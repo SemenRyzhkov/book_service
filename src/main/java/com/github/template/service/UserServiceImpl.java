@@ -4,15 +4,19 @@ import com.github.template.mapper.UserMapper;
 import com.github.template.model.db.db.User;
 import com.github.template.model.db.to.UserDto;
 import com.github.template.repository.UserRepository;
+import com.github.template.security.SecurityUser;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("userServiceImpl")
 @AllArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository repository;
     private final UserMapper mapper;
 
@@ -27,22 +31,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = repository.findByEmail(email).orElseThrow(() ->
+                new UsernameNotFoundException("user does not exist"));
+        return SecurityUser.fromUser(user);
+    }
+
+    @Override
     public void create(@NonNull UserDto userDto) {
+
         repository.save(mapper.dtoToEntity(userDto));
     }
 
     @Override
     public void update(@NonNull UserDto userDto, long id) {
-        repository.findById(id)
-                .map(user -> {
-                    userDto.setId(id);
-                    return repository.save(mapper.dtoToEntity(userDto));
-                })
-                .orElseGet(() -> {
-                    User user = mapper.dtoToEntity(userDto);
-                    user.setId(id);
-                    return repository.save(user);
-                });
+        repository.getOne(id);
+        repository.save(mapper.dtoToEntity(userDto));
     }
 
     @Override
