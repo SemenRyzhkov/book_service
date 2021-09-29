@@ -35,13 +35,23 @@
             <column name="review_date" type="TIMESTAMP"/>
             <column name="book_id" type="BIGINT"/>
         </createTable>
-        <addForeignKeyConstraint baseTableName="review" baseColumnNames="book_id" constraintName="book_id_fk"
+        <addForeignKeyConstraint baseTableName="review"
+                                 baseColumnNames="book_id"
+                                 constraintName="book_id_fk"
                                  referencedTableName="book"
                                  referencedColumnNames="id"/>
 
     </changeSet>
-        <changeSet id="13" author="sryzhkov" runOnChange="true">
-            <sqlFile path="data/init_db.sql" relativeToChangelogFile="true"/>
-        </changeSet>
+
+    <changeSet  author="ryzhkov"  id="users_unique_email_idx">
+        <addUniqueConstraint
+                constraintName="users_unique_email_idx"
+                columnNames="email"
+                tableName="user"/>
+    </changeSet>
+
+    <changeSet id="13" author="sryzhkov" runAlways="true">
+        <sqlFile path="data/init_db.sql" relativeToChangelogFile="true"/>
+    </changeSet>
 
 </databaseChangeLog>

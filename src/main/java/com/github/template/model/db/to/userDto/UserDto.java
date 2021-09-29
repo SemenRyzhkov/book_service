@@ -1,4 +1,4 @@
-package com.github.template.model.db.to;
+package com.github.template.model.db.to.userDto;
 
 import lombok.Data;
 

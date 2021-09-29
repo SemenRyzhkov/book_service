@@ -2,7 +2,7 @@ package com.github.template.controller;
 
 import com.github.template.exception.NotFoundException;
 import com.github.template.model.db.db.User;
-import com.github.template.model.db.to.AuthenticationRequestDto;
+import com.github.template.model.db.to.userDto.AuthenticationRequestDto;
 import com.github.template.repository.UserRepository;
 import com.github.template.security.JwtTokenProvider;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +42,7 @@ public class AuthenticationRestController {
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
             User user = userRepository.findByEmail(request.getEmail()).orElseThrow(()->
                     new NotFoundException("User doesn't exist"));
-            String token = jwtTokenProvider.createToken(request.getEmail(), user.getRole().name());
+            String token = jwtTokenProvider.createToken(request.getEmail(), user.getRole().name(), user.getId());
             Map<Object, Object> response = new HashMap<>();
             response.put("email", request.getEmail());
             response.put("token", token);
