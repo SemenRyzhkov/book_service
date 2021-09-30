@@ -27,7 +27,7 @@ public class UserController {
     private final UserService service;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('users:write')")
     public Page<UserDto> getAll(
             @PageableDefault Pageable pageable) {
         log.info("getAllUser");
