@@ -17,6 +17,7 @@ public class JacksonObjectMapper extends ObjectMapper {
         registerModule(new Hibernate5Module());
 
         registerModule(new JavaTimeModule());
+
         configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 

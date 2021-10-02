@@ -62,4 +62,8 @@ public class TestMatcher<T> {
     public ResultMatcher contentJson(Iterable<T> expected) {
         return result -> assertMatch(readListFromJsonMvcResult(result, clazz), expected);
     }
+
+    public ResultMatcher contentJsonPageable(Iterable<T> expected) {
+        return result -> assertMatch(TestUtil.readPageFromJsonMvcResult(result, clazz), expected);
+    }
 }

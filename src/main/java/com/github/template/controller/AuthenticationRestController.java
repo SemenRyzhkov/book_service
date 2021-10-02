@@ -5,6 +5,7 @@ import com.github.template.model.db.db.User;
 import com.github.template.model.db.to.userDto.AuthenticationRequestDto;
 import com.github.template.repository.UserRepository;
 import com.github.template.security.JwtTokenProvider;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +22,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
+@Profile(value = {"development", "production"})
 public class AuthenticationRestController {
 
     private final AuthenticationManager authenticationManager;

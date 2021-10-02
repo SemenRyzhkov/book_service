@@ -36,7 +36,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDto get(long id) {
-        return mapper.entityToDto(repository.getOne(id));
+        return mapper.entityToDto(repository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException(String.format("User with id %d does not exist", id))));
     }
 
     @Override

@@ -31,3 +31,6 @@ jwt:
   secret: "spring"
   expiration: 604800
   header: Authorization
+
+auth:
+  enabled: true

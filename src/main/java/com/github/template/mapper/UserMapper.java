@@ -12,6 +12,7 @@ import java.util.List;
 public interface UserMapper {
 
     UserDto entityToDto(User user);
+    UserEditDto entityToEditDto(User user);
 
     @InheritInverseConfiguration
     User dtoToEntity(UserDto dto);

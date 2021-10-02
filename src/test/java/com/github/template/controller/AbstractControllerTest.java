@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.Cache;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -20,12 +21,11 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import javax.annotation.PostConstruct;
 
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest
 @ContextConfiguration(initializers = Postgres.Initializer.class)
 @ExtendWith(TimingExtension.class)
 @Transactional
+@ActiveProfiles(value = "test")
 public abstract class AbstractControllerTest {
 
     private static final CharacterEncodingFilter CHARACTER_ENCODING_FILTER = new CharacterEncodingFilter();
@@ -60,7 +60,6 @@ public abstract class AbstractControllerTest {
     private void postConstruct() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(webApplicationContext)
-                .apply(springSecurity())
                 .addFilter(CHARACTER_ENCODING_FILTER)
                 .build();
     }
